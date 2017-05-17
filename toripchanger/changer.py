@@ -1,4 +1,5 @@
 import ipaddress
+from time import sleep
 
 import requests
 from stem import Signal
@@ -73,6 +74,7 @@ class TorIpChanger(object):
         :raises TorIpError
         """
         attempts = 0
+        reason = None
 
         while True:
             if attempts == NEW_IP_MAX_ATTEMPTS:
@@ -82,7 +84,7 @@ class TorIpChanger(object):
 
             try:
                 current_ip = self.get_current_ip()
-            except TorIpError:
+            except TorIpError as exc:
                 self._obtain_new_ip()
                 continue
 
@@ -139,6 +141,9 @@ class TorIpChanger(object):
 
     def _obtain_new_ip(self):
         """Change TOR's IP"""
-        with Controller.from_port(TOR_PORT) as controller:
-            controller.authenticate(TOR_PASSWORD)
+        with Controller.from_port(port=TOR_PORT) as controller:
+            controller.authenticate(password=TOR_PASSWORD)
             controller.signal(Signal.NEWNYM)
+
+        # Wait till the IP 'settles in'.
+        sleep(0.5)

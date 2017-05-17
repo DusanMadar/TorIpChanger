@@ -1,0 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# packaging directories
+build/
+dist/
+*.egg-info/
+*.eggs/
+*.cache/
+
+# C extensions
+*.so
+
+# virtualenv folder
+venv/
+
+# backup files
+*~
+
+# py.test coverage
+.coverage

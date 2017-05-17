@@ -74,7 +74,6 @@ class TorIpChanger(object):
         :raises TorIpError
         """
         attempts = 0
-        reason = None
 
         while True:
             if attempts == NEW_IP_MAX_ATTEMPTS:

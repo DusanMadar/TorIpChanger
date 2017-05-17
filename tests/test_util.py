@@ -1,12 +1,6 @@
 import unittest
 from unittest.mock import patch
 
-# import os
-# import sys
-# current_dir = os.path.dirname(os.path.dirname(__file__))
-# sys.path.insert(0, current_dir)
-# sys.path.insert(1, os.path.join(current_dir, 'toripchanger'))
-
 from toripchanger.utils import get
 from toripchanger.config import LOCAL_HTTP_PROXY
 

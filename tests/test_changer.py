@@ -3,12 +3,6 @@ from unittest.mock import patch, Mock
 
 from stem import Signal
 
-import os
-import sys
-current_dir = os.path.dirname(os.path.dirname(__file__))
-sys.path.insert(0, current_dir)
-sys.path.insert(1, os.path.join(current_dir, 'toripchanger'))
-
 from toripchanger.changer import ICANHAZIP, TorIpChanger, TorIpError
 from toripchanger import config
 
@@ -222,18 +216,23 @@ class TestTorIpChanger(unittest.TestCase):
         tor_ip_changer._manage_used_ips(current_ip)
         self.assertEqual(tor_ip_changer.used_ips, expected_used_ips)
 
+    @patch('toripchanger.changer.sleep')
     @patch('toripchanger.changer.Controller.from_port')
-    def test_obtain_new_ip(self, mock_from_port):
+    def test_obtain_new_ip(self, mock_from_port, mock_sleep):
         """Test that '_obtain_new_ip' obtains new Tor IP and expected methods
         are called while doing so within the context manager."""
         tor_ip_changer = TorIpChanger()
         tor_ip_changer._obtain_new_ip()
 
-        mock_from_port.assert_any_call(config.TOR_PORT)
+        mock_from_port.assert_any_call(port=config.TOR_PORT)
 
         mock_controler = mock_from_port.return_value.__enter__()
         mock_controler.signal.assert_any_call(Signal.NEWNYM)
-        mock_controler.authenticate.assert_any_call(config.TOR_PASSWORD)
+        mock_controler.authenticate.assert_any_call(
+            password=config.TOR_PASSWORD
+        )
+
+        mock_sleep.assert_called_once_with(0.5)
 
 
 if __name__ == '__main__':

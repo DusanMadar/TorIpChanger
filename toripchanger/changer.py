@@ -1,27 +1,32 @@
 import ipaddress
 from time import sleep
 
-import requests
+from requests import get
 from stem import Signal
 from stem.control import Controller
 
-from config import (
-    NEW_IP_MAX_ATTEMPTS,
-    TOR_PASSWORD,
-    TOR_PORT,
-)
-from utils import get as get_with_tor
+from exceptions import TorIpError
+
+# Default settings.
+LOCAL_HTTP_PROXY = '127.0.0.1:8118'
+NEW_IP_MAX_ATTEMPTS = 10
+TOR_PASSWORD = ''
+TOR_PORT = 9051
 
 
+# Service to get current IP.
 ICANHAZIP = 'http://icanhazip.com/'
 
 
-class TorIpError(Exception):
-    pass
-
-
 class TorIpChanger(object):
-    def __init__(self, reuse_threshold=1):
+    def __init__(
+        self,
+        reuse_threshold=1,
+        local_http_proxy=LOCAL_HTTP_PROXY,
+        tor_password=TOR_PASSWORD,
+        tor_port=TOR_PORT,
+        new_ip_max_attempts=NEW_IP_MAX_ATTEMPTS
+    ):
         """TorIpChanger - make sure requesting a new Tor IP address really does
         return a new (different) IP.
 
@@ -37,11 +42,24 @@ class TorIpChanger(object):
 
         :argument reuse_threshold: IPs to use before reusing the current one
         :type reuse_threshold: int
+        :argument local_http_proxy: local proxy IP and port
+        :type local_http_proxy: str
+        :argument tor_password: Tor password
+        :type tor_password: str
+        :argument tor_port: Tor port
+        :type tor_port: int
+        :argument new_ip_max_attempts: get new IP attemps limit
+        :type new_ip_max_attempts: int
 
         :returns bool
         """
         self.reuse_threshold = reuse_threshold
         self.used_ips = []
+
+        self.local_http_proxy = local_http_proxy
+        self.tor_port = tor_port
+        self.tor_password = tor_password
+        self.new_ip_max_attempts = new_ip_max_attempts
 
         self._real_ip = None
 
@@ -49,7 +67,7 @@ class TorIpChanger(object):
     def real_ip(self):
         """The actual public IP address of this computer."""
         if self._real_ip is None:
-            response = requests.get(ICANHAZIP)
+            response = get(ICANHAZIP)
             self._real_ip = self._get_response_text(response)
 
         return self._real_ip
@@ -60,7 +78,7 @@ class TorIpChanger(object):
         :returns str
         :raises TorIpError
         """
-        response = get_with_tor(ICANHAZIP)
+        response = get(ICANHAZIP, proxies={'http': self.local_http_proxy})
 
         if response.ok:
             return self._get_response_text(response)
@@ -76,7 +94,7 @@ class TorIpChanger(object):
         attempts = 0
 
         while True:
-            if attempts == NEW_IP_MAX_ATTEMPTS:
+            if attempts == self.new_ip_max_attempts:
                 raise TorIpError('Failed to obtain a new usable TOR IP')
 
             attempts += 1
@@ -140,8 +158,8 @@ class TorIpChanger(object):
 
     def _obtain_new_ip(self):
         """Change TOR's IP"""
-        with Controller.from_port(port=TOR_PORT) as controller:
-            controller.authenticate(password=TOR_PASSWORD)
+        with Controller.from_port(port=self.tor_port) as controller:
+            controller.authenticate(password=self.tor_password)
             controller.signal(Signal.NEWNYM)
 
         # Wait till the IP 'settles in'.

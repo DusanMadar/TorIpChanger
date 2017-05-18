@@ -3,8 +3,15 @@ from unittest.mock import patch, Mock
 
 from stem import Signal
 
-from toripchanger.changer import ICANHAZIP, TorIpChanger, TorIpError
-from toripchanger import config
+from toripchanger.changer import (
+    ICANHAZIP,
+    LOCAL_HTTP_PROXY,
+    NEW_IP_MAX_ATTEMPTS,
+    TorIpChanger,
+    TorIpError,
+    TOR_PASSWORD,
+    TOR_PORT,
+)
 
 
 class TestTorIpChanger(unittest.TestCase):
@@ -21,11 +28,11 @@ class TestTorIpChanger(unittest.TestCase):
 
         self.assertEqual(tor_ip_changer.reuse_threshold, 5)
 
-    @patch('toripchanger.changer.requests.get')
+    @patch('toripchanger.changer.get')
     @patch('toripchanger.changer.TorIpChanger._get_response_text')
     def test_real_ip(self, mock_get_response_text, mock_get):
-        """Test that 'real_ip' is obtained by normal 'request.get',
-        i.e. without routing trafic through Tor/Privoxy."""
+        """Test that 'real_ip' is obtained without routing the request through
+        Tor/Privoxy."""
         mock_response = Mock()
         mock_get.return_value = mock_response
 
@@ -35,11 +42,11 @@ class TestTorIpChanger(unittest.TestCase):
         mock_get.assert_called_once_with(ICANHAZIP)
         mock_get_response_text.assert_called_once_with(mock_response)
 
-    @patch('toripchanger.changer.get_with_tor')
+    @patch('toripchanger.changer.get')
     @patch('toripchanger.changer.TorIpChanger._get_response_text')
-    def test_current_ip(self, mock_get_response_text, mock_get_with_tor):
-        """Test that 'get_current_ip' is obtained by wrapped 'request.get'
-        i.e. routing trafic through Tor/Privoxy."""
+    def test_current_ip(self, mock_get_response_text, mock_get):
+        """Test that 'real_ip' is obtained routing the request through
+        Tor/Privoxy."""
         mock_get_response_text.return_value = '9.9.9.9'
 
         tor_ip_changer = TorIpChanger()
@@ -50,15 +57,18 @@ class TestTorIpChanger(unittest.TestCase):
             mock_get_response_text.return_value
         )
 
-        mock_get_with_tor.assert_called_once_with(ICANHAZIP)
+        mock_get.assert_called_once_with(
+            ICANHAZIP,
+            proxies={'http': LOCAL_HTTP_PROXY}
+        )
 
-    @patch('toripchanger.changer.get_with_tor')
-    def test_current_ip_exception(self, mock_get_with_tor):
+    @patch('toripchanger.changer.get')
+    def test_current_ip_exception(self, mock_get):
         """Test that 'get_current_ip' raises TorIpError when an IP isn't
         returned."""
         mock_response = Mock()
         mock_response.ok = False
-        mock_get_with_tor.return_value = mock_response
+        mock_get.return_value = mock_response
 
         tor_ip_changer = TorIpChanger()
 
@@ -80,10 +90,10 @@ class TestTorIpChanger(unittest.TestCase):
             tor_ip_changer.get_new_ip()
 
         self.assertEqual(
-            mock_obtain_new_ip.call_count, config.NEW_IP_MAX_ATTEMPTS
+            mock_obtain_new_ip.call_count, NEW_IP_MAX_ATTEMPTS
         )
         self.assertEqual(
-            mock_get_current_ip.call_count, config.NEW_IP_MAX_ATTEMPTS
+            mock_get_current_ip.call_count, NEW_IP_MAX_ATTEMPTS
         )
 
     @patch('toripchanger.changer.TorIpChanger.get_current_ip')
@@ -104,13 +114,13 @@ class TestTorIpChanger(unittest.TestCase):
             tor_ip_changer.get_new_ip()
 
         self.assertEqual(
-            mock_obtain_new_ip.call_count, config.NEW_IP_MAX_ATTEMPTS
+            mock_obtain_new_ip.call_count, NEW_IP_MAX_ATTEMPTS
         )
         self.assertEqual(
-            mock_get_current_ip.call_count, config.NEW_IP_MAX_ATTEMPTS
+            mock_get_current_ip.call_count, NEW_IP_MAX_ATTEMPTS
         )
         self.assertEqual(
-            mock_ip_is_usable.call_count, config.NEW_IP_MAX_ATTEMPTS
+            mock_ip_is_usable.call_count, NEW_IP_MAX_ATTEMPTS
         )
 
     @patch('toripchanger.changer.TorIpChanger.get_current_ip')
@@ -224,12 +234,12 @@ class TestTorIpChanger(unittest.TestCase):
         tor_ip_changer = TorIpChanger()
         tor_ip_changer._obtain_new_ip()
 
-        mock_from_port.assert_any_call(port=config.TOR_PORT)
+        mock_from_port.assert_any_call(port=TOR_PORT)
 
         mock_controler = mock_from_port.return_value.__enter__()
         mock_controler.signal.assert_any_call(Signal.NEWNYM)
         mock_controler.authenticate.assert_any_call(
-            password=config.TOR_PASSWORD
+            password=TOR_PASSWORD
         )
 
         mock_sleep.assert_called_once_with(0.5)

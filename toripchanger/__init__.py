@@ -1,1 +1,1 @@
-from changer import TorIpChanger  # noqa
+from .changer import TorIpChanger  # noqa

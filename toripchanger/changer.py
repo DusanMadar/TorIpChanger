@@ -5,7 +5,7 @@ from requests import get
 from stem import Signal
 from stem.control import Controller
 
-from exceptions import TorIpError
+from .exceptions import TorIpError
 
 # Default settings.
 LOCAL_HTTP_PROXY = '127.0.0.1:8118'

@@ -2,6 +2,7 @@ import ipaddress
 from time import sleep
 
 from requests import get
+from requests.exceptions import RequestException
 from stem import Signal
 from stem.control import Controller
 
@@ -101,7 +102,7 @@ class TorIpChanger(object):
 
             try:
                 current_ip = self.get_current_ip()
-            except TorIpError as exc:
+            except (RequestException, TorIpError):
                 self._obtain_new_ip()
                 continue
 

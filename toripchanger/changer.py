@@ -28,7 +28,8 @@ class TorIpChanger(object):
         tor_port=TOR_PORT,
         new_ip_max_attempts=NEW_IP_MAX_ATTEMPTS
     ):
-        """TorIpChanger - make sure requesting a new Tor IP address really does
+        """
+        TorIpChanger - make sure requesting a new Tor IP address really does
         return a new (different) IP.
 
         The 'reuse_threshold' argument specifies the number of unique Tor IPs
@@ -51,8 +52,6 @@ class TorIpChanger(object):
         :type tor_port: int
         :argument new_ip_max_attempts: get new IP attemps limit
         :type new_ip_max_attempts: int
-
-        :returns bool
         """
         self.reuse_threshold = reuse_threshold
         self.used_ips = []
@@ -66,7 +65,9 @@ class TorIpChanger(object):
 
     @property
     def real_ip(self):
-        """The actual public IP address of this computer."""
+        """
+        The actual public IP address of this computer.
+        """
         if self._real_ip is None:
             response = get(ICANHAZIP)
             self._real_ip = self._get_response_text(response)
@@ -74,7 +75,8 @@ class TorIpChanger(object):
         return self._real_ip
 
     def get_current_ip(self):
-        """Get the current IP address TOR is using.
+        """
+        Get the current IP address Tor is using.
 
         :returns str
         :raises TorIpError
@@ -84,10 +86,11 @@ class TorIpChanger(object):
         if response.ok:
             return self._get_response_text(response)
 
-        raise TorIpError('Failed to get the current TOR IP address')
+        raise TorIpError('Failed to get the current Tor IP address')
 
     def get_new_ip(self):
-        """Try to obtain new a usable TOR IP.
+        """
+        Try to obtain new a usable TOR IP.
 
         :returns bool
         :raises TorIpError
@@ -96,7 +99,7 @@ class TorIpChanger(object):
 
         while True:
             if attempts == self.new_ip_max_attempts:
-                raise TorIpError('Failed to obtain a new usable TOR IP')
+                raise TorIpError('Failed to obtain a new usable Tor IP')
 
             attempts += 1
 
@@ -120,9 +123,10 @@ class TorIpChanger(object):
         return response.text.strip()
 
     def _ip_is_usable(self, current_ip):
-        """Check if the current TOR's IP address is usable.
+        """
+        Check if the current Tor's IP address is usable.
 
-        :argument current_ip: current TOR IP address
+        :argument current_ip: current Tor IP address
         :type current_ip: str
 
         :returns bool
@@ -144,9 +148,10 @@ class TorIpChanger(object):
         return True
 
     def _manage_used_ips(self, current_ip):
-        """Handle registering and releasing used Tor IPs.
+        """
+        Handle registering and releasing used Tor IPs.
 
-        :argument current_ip: current TOR IP address
+        :argument current_ip: current Tor IP address
         :type current_ip: str
         """
         # Register current IP.
@@ -158,7 +163,9 @@ class TorIpChanger(object):
                 del self.used_ips[0]
 
     def _obtain_new_ip(self):
-        """Change TOR's IP"""
+        """
+        Change Tor's IP.
+        """
         with Controller.from_port(port=self.tor_port) as controller:
             controller.authenticate(password=self.tor_password)
             controller.signal(Signal.NEWNYM)

@@ -109,8 +109,7 @@ class TorIpChanger(object):
                 self._obtain_new_ip()
                 continue
 
-            ip_usable = self._ip_is_usable(current_ip)
-            if not ip_usable:
+            if not self._ip_is_usable(current_ip):
                 self._obtain_new_ip()
                 continue
 

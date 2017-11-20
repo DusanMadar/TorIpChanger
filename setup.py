@@ -9,9 +9,10 @@ from setuptools import setup
 
 
 setup(
-    version='0.1.0',
+    version='1.0.0',
     name='toripchanger',
     url='https://github.com/DusanMadar/TorIpChanger',
+    license='MIT',
 
     author='Dusan Madar',
     author_email='madar.dusan@gmail.com',
@@ -21,15 +22,19 @@ setup(
 
     packages=[
         'toripchanger',
-        'tests'
+        'tests',
+    ],
+    install_requires=[
+        'requests',
+        'stem',
     ],
 
     test_suite='tests',
 
     classifiers=[
-        'Development Status :: 3 - Alpha',
-        'Intended Audience :: End Users/Desktop',
-        'Programming Language :: Python :: 3.4',
+        'Development Status :: 5 - Production/Stable',
+        'Intended Audience :: Developers',
+        'Programming Language :: Python :: 3',
         'Operating System :: POSIX :: Linux',
         'Natural Language :: English',
     ]

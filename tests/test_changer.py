@@ -151,6 +151,7 @@ class TestTorIpChanger(unittest.TestCase):
         ]
 
         tor_ip_changer = TorIpChanger()
+        tor_ip_changer._real_ip = '0.0.0.0'
         tor_ip_changer.used_ips = ['1.1.1.1']
 
         new_ip = tor_ip_changer.get_new_ip()
@@ -175,15 +176,15 @@ class TestTorIpChanger(unittest.TestCase):
 
     def test_ip_was_used(self):
         """
-        Test `_ip_was_used` recognizes an already used IP.
+        Test '_ip_was_used' recognizes an already used IP.
         """
         tor_ip_changer = TorIpChanger()
 
-        # Using `8.8.8.8` the first time.
+        # Using '8.8.8.8' the first time.
         ip_is_safe = tor_ip_changer._ip_is_safe('8.8.8.8')
         self.assertTrue(ip_is_safe)
 
-        # Using `8.8.8.8` again while it's still known to be used already.
+        # Using '8.8.8.8' again while it's still known to be used already.
         tor_ip_changer.used_ips.append('8.8.8.8')
         ip_is_safe = tor_ip_changer._ip_is_safe('8.8.8.8')
         self.assertFalse(ip_is_safe)

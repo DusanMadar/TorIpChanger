@@ -121,6 +121,17 @@ class TorIpChanger(object):
     def _get_response_text(self, response):
         return response.text.strip()
 
+    def _ip_is_safe(self, current_ip):
+        """
+        Check if it's safe to (re-)use the current IP.
+
+        :argument current_ip: current Tor IP address
+        :type current_ip: str
+
+        :returns bool
+        """
+        return current_ip not in self.used_ips
+
     def _ip_is_usable(self, current_ip):
         """
         Check if the current Tor's IP address is usable.
@@ -141,7 +152,7 @@ class TorIpChanger(object):
             return False
 
         # Do dot allow IP reuse.
-        if current_ip in self.used_ips:
+        if not self._ip_is_safe(current_ip):
             return False
 
         return True

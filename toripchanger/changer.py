@@ -54,7 +54,7 @@ class TorIpChanger(object):
         :type new_ip_max_attempts: int
         """
         self.reuse_threshold = reuse_threshold
-        self.used_ips = []
+        self.used_ips = []  # We cannot use set() because order matters.
 
         self.local_http_proxy = local_http_proxy
         self.tor_port = tor_port
@@ -66,7 +66,7 @@ class TorIpChanger(object):
     @property
     def real_ip(self):
         """
-        The actual public IP address of this computer.
+        The actual public IP of this host.
         """
         if self._real_ip is None:
             response = get(ICANHAZIP)
@@ -76,7 +76,7 @@ class TorIpChanger(object):
 
     def get_current_ip(self):
         """
-        Get the current IP address Tor is using.
+        Get the current IP Tor is using.
 
         :returns str
         :raises TorIpError
@@ -86,7 +86,7 @@ class TorIpChanger(object):
         if response.ok:
             return self._get_response_text(response)
 
-        raise TorIpError('Failed to get the current Tor IP address')
+        raise TorIpError('Failed to get the current Tor IP')
 
     def get_new_ip(self):
         """
@@ -125,7 +125,7 @@ class TorIpChanger(object):
         """
         Check if it's safe to (re-)use the current IP.
 
-        :argument current_ip: current Tor IP address
+        :argument current_ip: current Tor IP
         :type current_ip: str
 
         :returns bool
@@ -134,9 +134,9 @@ class TorIpChanger(object):
 
     def _ip_is_usable(self, current_ip):
         """
-        Check if the current Tor's IP address is usable.
+        Check if the current Tor's IP is usable.
 
-        :argument current_ip: current Tor IP address
+        :argument current_ip: current Tor IP
         :type current_ip: str
 
         :returns bool
@@ -161,7 +161,7 @@ class TorIpChanger(object):
         """
         Handle registering and releasing used Tor IPs.
 
-        :argument current_ip: current Tor IP address
+        :argument current_ip: current Tor IP
         :type current_ip: str
         """
         # Register current IP.

@@ -1,5 +1,3 @@
-[![PyPI version](https://badge.fury.io/py/toripchanger.svg)](https://badge.fury.io/py/toripchanger)
-
 # TorIpChanger
 
 A simple workaround for the [Tor IP chnaging behavior](https://stem.torproject.org/faq.html#how-do-i-request-a-new-identity-from-tor):

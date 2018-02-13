@@ -24,6 +24,7 @@ current_ip = tor_ip_changer_5.get_new_ip()
 
 TorIpChanger assumes you have installed and setup Tor and Privoxy, for example following steps mentioned in these tutorials:
 
+* [A step-by-step guide how to use Python with Tor and Privoxy](https://gist.github.com/DusanMadar/8d11026b7ce0bce6a67f7dd87b999f6b)
 * [Crawling anonymously with Tor in Python](http://sacharya.com/crawling-anonymously-with-tor-in-python/)
   * [Alternative link (Gist)](https://gist.github.com/KhepryQuixote/46cf4f3b999d7f658853) for "Crawling anonymously with Tor in Python"
 * [Selenium, Tor, And You!](http://lyle.smu.edu/~jwadleigh/seltest/)

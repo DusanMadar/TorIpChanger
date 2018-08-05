@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/DusanMadar/TorIpChanger.svg?branch=master)](https://travis-ci.org/DusanMadar/TorIpChanger)
+
 # TorIpChanger
 
 A simple workaround for the [Tor IP chnaging behavior](https://stem.torproject.org/faq.html#how-do-i-request-a-new-identity-from-tor):

@@ -9,14 +9,14 @@ from stem.control import Controller
 from .exceptions import TorIpError
 
 # Default settings.
-LOCAL_HTTP_PROXY = '127.0.0.1:8118'
+LOCAL_HTTP_PROXY = "127.0.0.1:8118"
 NEW_IP_MAX_ATTEMPTS = 10
-TOR_PASSWORD = ''
+TOR_PASSWORD = ""
 TOR_PORT = 9051
 
 
 # Service to get current IP.
-ICANHAZIP = 'http://icanhazip.com/'
+ICANHAZIP = "http://icanhazip.com/"
 
 
 class TorIpChanger(object):
@@ -26,7 +26,7 @@ class TorIpChanger(object):
         local_http_proxy=LOCAL_HTTP_PROXY,
         tor_password=TOR_PASSWORD,
         tor_port=TOR_PORT,
-        new_ip_max_attempts=NEW_IP_MAX_ATTEMPTS
+        new_ip_max_attempts=NEW_IP_MAX_ATTEMPTS,
     ):
         """
         TorIpChanger - make sure requesting a new Tor IP address really does
@@ -81,12 +81,12 @@ class TorIpChanger(object):
         :returns str
         :raises TorIpError
         """
-        response = get(ICANHAZIP, proxies={'http': self.local_http_proxy})
+        response = get(ICANHAZIP, proxies={"http": self.local_http_proxy})
 
         if response.ok:
             return self._get_response_text(response)
 
-        raise TorIpError('Failed to get the current Tor IP')
+        raise TorIpError("Failed to get the current Tor IP")
 
     def get_new_ip(self):
         """
@@ -99,7 +99,7 @@ class TorIpChanger(object):
 
         while True:
             if attempts == self.new_ip_max_attempts:
-                raise TorIpError('Failed to obtain a new usable Tor IP')
+                raise TorIpError("Failed to obtain a new usable Tor IP")
 
             attempts += 1
 

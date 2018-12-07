@@ -10,13 +10,13 @@ A simple workaround for [Tor IP chnaging behavior](https://stem.torproject.org/f
 
 > An important thing to note is that a new circuit does not necessarily mean a new IP address. Paths are randomly selected based on heuristics like speed and stability. There are only so many large exits in the Tor network, so it's not uncommon to reuse an exit you have had previously.
 
-# Installation
+## Installation
 
 ```
 pip install toripchanger
 ```
 
-# Usage example
+## Usage example
 
 With TorIpChanger you can define how often a Tor IP can be reused:
 

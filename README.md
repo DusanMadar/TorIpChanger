@@ -18,6 +18,8 @@ pip install toripchanger
 
 ## Usage example
 
+> NOTE: TorIpChanger expects Tor and proxy (e.g. Privoxy) run on localhost.
+
 With TorIpChanger you can define how often a Tor IP can be reused:
 
 ```

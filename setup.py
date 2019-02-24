@@ -11,7 +11,7 @@ def read(fname, readlines=False):
 
 
 requirements = read("requirements.txt", True)
-server_requirements = ["flask"]
+requirements_server = read("requirements-server.txt", True)
 
 setup(
     version="1.1.0",
@@ -30,7 +30,7 @@ setup(
     platforms="linux",
     python_requires=">=3.6",
     install_requires=requirements,
-    tests_require=requirements + server_requirements,
+    tests_require=requirements + requirements_server,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
@@ -38,5 +38,5 @@ setup(
         "Operating System :: POSIX :: Linux",
         "Natural Language :: English",
     ],
-    extras_require={"server": server_requirements},
+    extras_require={"server": requirements_server},
 )

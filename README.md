@@ -52,7 +52,7 @@ which doesn't run on localhost. To do this, you have two options.
 
 #### Set `ControlListenAddress`
 
-Be aware of the risks concerning this settings described at https://people.torproject.org/~sysrqb/webwml/docs/tor-manual.html.en:
+Be aware of the risks concerning this settings described at https://people.torproject.org/~sysrqb/webwml/docs/tor-manual.html.en#ControlListenAddress (not part of the official documentation!):
 
 > We strongly recommend that you leave this alone unless you know what you’re doing, since giving attackers access to your control listener is really dangerous.
 
@@ -68,7 +68,7 @@ current_ip = tor_ip_changer.get_new_ip()
 
 #### Use `toripchanger_server`
 
-`toripchanger_server` script starts a simple web server which allows you to change Tor' IP remotely using an HTTP get reques to `/changeip/`. The response body is always
+`toripchanger_server` script starts a simple web server which allows you to change Tor' IP remotely using an HTTP get request to `/changeip/`. The response body is always
 
 ```
 {
@@ -80,7 +80,7 @@ with an appropriate status (`error` is an empty string when all is good).
 
 Changing Tor' IP may not be instantaneous (especially when combined with a high `reuse_threshold`) and hence your client should use a reasonable timeout (e.g. at least 60s).
 
-`toripchanger_server` takes all arguments required to initialize `TorIpChanger` plus `--server-host` and `-server-port`, for more details see the usage below.
+`toripchanger_server` takes all arguments required to initialize `TorIpChanger` plus `--server-host` and `--server-port`, for more details see the usage below.
 
 ```
 usage: toripchanger_server [-h] [--server-host SERVER_HOST]
@@ -115,5 +115,5 @@ To be able to change Tor' IP remotely with `toripchanger_server`:
 
   1. `pip install toripchanger[server]` in your container
   2. start `toripchanger_server`
-  3. expose the port `toripchanger_server` is running on to docker host
+  3. expose the port `toripchanger_server` is running on to Docker host (or other containers)
   4. test changing IP works, e.g. `curl http://localhost:8080/changeip/`

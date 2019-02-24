@@ -10,6 +10,7 @@ from toripchanger.changer import (
     TorIpChanger,
     TorIpError,
     TOR_PASSWORD,
+    TOR_ADDRESS,
     TOR_PORT,
 )
 
@@ -258,14 +259,10 @@ class TestTorIpChanger(unittest.TestCase):
         tor_ip_changer = TorIpChanger()
         tor_ip_changer._obtain_new_ip()
 
-        mock_from_port.assert_any_call(port=TOR_PORT)
+        mock_from_port.assert_any_call(address=TOR_ADDRESS, port=TOR_PORT)
 
         mock_controler = mock_from_port.return_value.__enter__()
         mock_controler.signal.assert_any_call(Signal.NEWNYM)
         mock_controler.authenticate.assert_any_call(password=TOR_PASSWORD)
 
         mock_sleep.assert_called_once_with(0.5)
-
-
-if __name__ == "__main__":
-    unittest.main()

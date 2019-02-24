@@ -9,9 +9,11 @@ from stem.control import Controller
 from .exceptions import TorIpError
 
 # Default settings.
+REUSE_THRESHOLD = 1
 LOCAL_HTTP_PROXY = "127.0.0.1:8118"
 NEW_IP_MAX_ATTEMPTS = 10
 TOR_PASSWORD = ""
+TOR_ADDRESS = "127.0.0.1"
 TOR_PORT = 9051
 
 
@@ -19,12 +21,13 @@ TOR_PORT = 9051
 ICANHAZIP = "http://icanhazip.com/"
 
 
-class TorIpChanger(object):
+class TorIpChanger:
     def __init__(
         self,
-        reuse_threshold=1,
+        reuse_threshold=REUSE_THRESHOLD,
         local_http_proxy=LOCAL_HTTP_PROXY,
         tor_password=TOR_PASSWORD,
+        tor_address=TOR_ADDRESS,
         tor_port=TOR_PORT,
         new_ip_max_attempts=NEW_IP_MAX_ATTEMPTS,
     ):
@@ -48,19 +51,21 @@ class TorIpChanger(object):
         :type local_http_proxy: str
         :argument tor_password: Tor password
         :type tor_password: str
-        :argument tor_port: Tor port
+        :argument tor_address: IP address of the Tor controller
+        :type tor_port: str
+        :argument tor_port: port number of the Tor controller
         :type tor_port: int
         :argument new_ip_max_attempts: get new IP attemps limit
         :type new_ip_max_attempts: int
         """
         self.reuse_threshold = reuse_threshold
-        self.used_ips = []  # We cannot use set() because order matters.
-
         self.local_http_proxy = local_http_proxy
-        self.tor_port = tor_port
         self.tor_password = tor_password
+        self.tor_address = tor_address
+        self.tor_port = tor_port
         self.new_ip_max_attempts = new_ip_max_attempts
 
+        self.used_ips = []  # We cannot use set() because order matters.
         self._real_ip = None
 
     @property
@@ -176,7 +181,9 @@ class TorIpChanger(object):
         """
         Change Tor's IP.
         """
-        with Controller.from_port(port=self.tor_port) as controller:
+        with Controller.from_port(
+            address=self.tor_address, port=self.tor_port
+        ) as controller:
             controller.authenticate(password=self.tor_password)
             controller.signal(Signal.NEWNYM)
 

@@ -6,7 +6,7 @@
 
 # TorIpChanger
 
-A simple workaround for [Tor IP chnaging behavior](https://stem.torproject.org/faq.html#how-do-i-request-a-new-identity-from-tor):
+A simple workaround for [Tor IP changing behavior](https://stem.torproject.org/faq.html#how-do-i-request-a-new-identity-from-tor):
 
 > An important thing to note is that a new circuit does not necessarily mean a new IP address. Paths are randomly selected based on heuristics like speed and stability. There are only so many large exits in the Tor network, so it's not uncommon to reuse an exit you have had previously.
 

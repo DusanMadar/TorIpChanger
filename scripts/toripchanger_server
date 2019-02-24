@@ -1,0 +1,96 @@
+#!/usr/bin/env python3
+
+
+import argparse
+import sys
+
+from toripchanger import changer
+try:
+    from toripchanger import server
+except ImportError as exc:
+    msg = str(exc)
+    if 'flask' not in msg:
+        raise
+
+    sys.exit(
+        f"{str(exc)}\nflask is required to to use `toripchanger_server`. Run "
+        "'pip install toripchanger[server]' to install required dependencies"
+    )
+
+
+def parse_cmd_args():
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+
+    parser.add_argument(
+        "--server-host",
+        default="0.0.0.0",
+        type=str,
+        help="TorIpChanger server host",
+    )
+    parser.add_argument(
+        "--server-port",
+        default=8080,
+        type=int,
+        help="TorIpChanger server port",
+    )
+
+    parser.add_argument(
+        "--reuse-threshold",
+        default=changer.REUSE_THRESHOLD,
+        type=int,
+        help="Number of IPs to use before reusing the current one",
+    )
+    parser.add_argument(
+        "--local-http-proxy",
+        default=changer.LOCAL_HTTP_PROXY,
+        type=str,
+        help="Local proxy IP and port",
+    )
+    parser.add_argument(
+        "--tor-password",
+        default=f"\"{changer.TOR_PASSWORD}\"",
+        type=str,
+        help="Tor controller password",
+    )
+    parser.add_argument(
+        "--tor-address",
+        default=changer.TOR_ADDRESS,
+        type=str,
+        help="IP address of the Tor controller",
+    )
+    parser.add_argument(
+        "--tor-port",
+        default=changer.TOR_PORT,
+        type=int,
+        help="Port number of the Tor controller",
+    )
+    parser.add_argument(
+        "--new-ip-max-attempts",
+        default=changer.NEW_IP_MAX_ATTEMPTS,
+        type=int,
+        help="Get new IP attemps limit",
+    )
+
+    return parser.parse_args()
+
+
+def main():
+    args = parse_cmd_args()
+
+    tor_ip_changer = changer.TorIpChanger(
+        reuse_threshold=args.reuse_threshold,
+        local_http_proxy=args.local_http_proxy,
+        tor_password=args.tor_password,
+        tor_address=args.tor_address,
+        tor_port=args.tor_port,
+        new_ip_max_attempts=args.new_ip_max_attempts
+    )
+
+    tor_ip_changer_server = server.init_server(tor_ip_changer)
+    tor_ip_changer_server.run(host=args.server_host, port=args.server_port)
+
+
+if __name__ == "__main__":
+    main()

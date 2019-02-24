@@ -1,25 +1,36 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-
-from setuptools import setup
-
-
 """TorIpChanger package installer"""
 
 
+from os import path
+from setuptools import setup
+
+
+def read(fname, readlines=False):
+    with open(path.join(path.abspath(path.dirname(__file__)), fname)) as f:
+        return f.readlines() if readlines else f.read()
+
+
+requirements = read("requirements.txt", True)
+server_requirements = ["flask"]
+
 setup(
-    version="1.0.0",
+    version="1.1.0",
     name="toripchanger",
     url="https://github.com/DusanMadar/TorIpChanger",
-    license="MIT",
     author="Dusan Madar",
     author_email="madar.dusan@gmail.com",
-    keywords="change tor ip",
     description="Python powered way to get a unique Tor IP",
+    long_description=read("README.md"),
+    long_description_content_type="text/markdown",
+    keywords="change tor ip",
     packages=["toripchanger", "tests"],
-    install_requires=["requests", "stem"],
+    scripts=["scripts/toripchanger_server"],
     test_suite="tests",
+    license="MIT",
+    platforms="linux",
+    python_requires=">=3.6",
+    install_requires=requirements,
+    tests_require=requirements + server_requirements,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
@@ -27,4 +38,5 @@ setup(
         "Operating System :: POSIX :: Linux",
         "Natural Language :: English",
     ],
+    extras_require={"server": server_requirements},
 )

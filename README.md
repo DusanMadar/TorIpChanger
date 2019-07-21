@@ -12,7 +12,7 @@ A simple workaround for [Tor IP changing behavior](https://stem.torproject.org/f
 
 ## Installation
 
-```
+```bash
 pip install toripchanger
 ```
 
@@ -29,7 +29,7 @@ TorIpChanger assumes you have installed and setup Tor and Privoxy, for example f
 
 With TorIpChanger you can define how often a Tor IP can be reused:
 
-```
+```python
 from toripchanger import TorIpChanger
 
 # Tor IP reuse is prohibited.
@@ -58,7 +58,7 @@ Be aware of the risks concerning this settings described at https://people.torpr
 
 Add `ControlListenAddress 0.0.0.0` to your `torrc` file (credits: https://stackoverflow.com/q/45901892/4183498) and set `tor_address` when initializing TorIpChanger
 
-```
+```python
 from toripchanger import TorIpChanger
 
 tor_ip_changer = TorIpChanger(tor_address="172.17.0.2")

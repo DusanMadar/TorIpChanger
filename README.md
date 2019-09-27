@@ -56,14 +56,10 @@ current_ip = tor_ip_changer.get_new_ip()
 ```
 
 Though, Tor is not very happy about it (and rightly so) and will warn you
->```
 >You have a ControlPort set to accept connections from a non-local address. This means that programs not running on your computer can reconfigure your Tor. That's pretty bad, since the controller protocol isn't encrypted! Maybe you should just listen on 127.0.0.1 and use a tool like stunnel or ssh to encrypt remote connections to your control port.
->```
 
 Also, you have to set either `CookieAuthentication` or `HashedControlPassword` otherwise `ControlPort` will be closed
->```
 >You have a ControlPort set to accept unauthenticated connections from a non-local address. This means that programs not running on your computer can reconfigure your Tor, without even having to guess a password. That's so bad that I'm closing your ControlPort for you. If you need to control your Tor remotely, try enabling authentication and using a tool like stunnel or ssh to encrypt remote access.
->```
 
 Please note `ControlListenAddress` config is **OBSOLETE** and Tor (tested with 0.3.3.7) will ignore it and log the following message
 > ```

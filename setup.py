@@ -14,7 +14,7 @@ requirements = read("requirements.txt", True)
 requirements_server = read("requirements-server.txt", True)
 
 setup(
-    version="1.1.0",
+    version="1.1.1",
     name="toripchanger",
     url="https://github.com/DusanMadar/TorIpChanger",
     author="Dusan Madar",
@@ -25,6 +25,7 @@ setup(
     keywords="change tor ip",
     packages=["toripchanger", "tests"],
     scripts=["scripts/toripchanger_server"],
+    include_package_data=True,
     test_suite="tests",
     license="MIT",
     platforms="linux",

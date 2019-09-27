@@ -6,7 +6,7 @@ from requests.exceptions import RequestException
 from stem import Signal
 from stem.control import Controller
 
-from .exceptions import TorIpError
+from toripchanger.exceptions import TorIpError
 
 # Default settings.
 REUSE_THRESHOLD = 1
@@ -15,6 +15,7 @@ NEW_IP_MAX_ATTEMPTS = 10
 TOR_PASSWORD = ""
 TOR_ADDRESS = "127.0.0.1"
 TOR_PORT = 9051
+POST_NEW_IP_SLEEP = 0.5
 
 
 # Service to get current IP.
@@ -30,6 +31,7 @@ class TorIpChanger:
         tor_address=TOR_ADDRESS,
         tor_port=TOR_PORT,
         new_ip_max_attempts=NEW_IP_MAX_ATTEMPTS,
+        post_new_ip_sleep=POST_NEW_IP_SLEEP,
     ):
         """
         TorIpChanger - make sure requesting a new Tor IP address really does
@@ -52,11 +54,13 @@ class TorIpChanger:
         :argument tor_password: Tor password
         :type tor_password: str
         :argument tor_address: IP address of the Tor controller
-        :type tor_port: str
+        :type tor_address: str
         :argument tor_port: port number of the Tor controller
         :type tor_port: int
         :argument new_ip_max_attempts: get new IP attemps limit
         :type new_ip_max_attempts: int
+        :argument post_new_ip_sleep: how long to wait after requesting a new IP
+        :type post_new_ip_sleep: float
         """
         self.reuse_threshold = reuse_threshold
         self.local_http_proxy = local_http_proxy
@@ -64,16 +68,16 @@ class TorIpChanger:
         self.tor_address = tor_address
         self.tor_port = tor_port
         self.new_ip_max_attempts = new_ip_max_attempts
+        self.post_new_ip_sleep = post_new_ip_sleep
 
         self.used_ips = []  # We cannot use set() because order matters.
-        self._real_ip = None
 
     @property
     def real_ip(self):
         """
         The actual public IP of this host.
         """
-        if self._real_ip is None:
+        if not hasattr(self, "_real_ip"):
             response = get(ICANHAZIP)
             self._real_ip = self._get_response_text(response)
 
@@ -188,4 +192,4 @@ class TorIpChanger:
             controller.signal(Signal.NEWNYM)
 
         # Wait till the IP 'settles in'.
-        sleep(0.5)
+        sleep(self.post_new_ip_sleep)

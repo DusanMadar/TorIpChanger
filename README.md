@@ -5,13 +5,11 @@
 
 
 # TorIpChanger
-
 A simple workaround for [Tor IP changing behavior](https://stem.torproject.org/faq.html#how-do-i-request-a-new-identity-from-tor):
 
 > An important thing to note is that a new circuit does not necessarily mean a new IP address. Paths are randomly selected based on heuristics like speed and stability. There are only so many large exits in the Tor network, so it's not uncommon to reuse an exit you have had previously.
 
 ## Installation
-
 ```bash
 pip install toripchanger
 ```
@@ -22,13 +20,12 @@ TorIpChanger assumes you have installed and setup Tor and Privoxy, for example f
 * [Crawling anonymously with Tor in Python](http://sacharya.com/crawling-anonymously-with-tor-in-python/)
   * [Alternative link (Gist)](https://gist.github.com/KhepryQuixote/46cf4f3b999d7f658853) for "Crawling anonymously with Tor in Python"
 
+Or, when using Docker, simply use https://github.com/dperson/torproxy.
+
 
 ## Usage
-
 ### Basic examples
-
 With TorIpChanger you can define how often a Tor IP can be reused:
-
 ```python
 from toripchanger import TorIpChanger
 
@@ -46,18 +43,11 @@ current_ip = tor_ip_changer_5.get_new_ip()
 ```
 
 ### Remote Tor control
-
 Sometimes, typically while using Docker, you may want to control a Tor instance
 which doesn't run on localhost. To do this, you have two options.
 
-#### Set `ControlListenAddress`
-
-Be aware of the risks concerning this settings described at https://people.torproject.org/~sysrqb/webwml/docs/tor-manual.html.en#ControlListenAddress (not part of the official documentation!):
-
-> We strongly recommend that you leave this alone unless you know what you’re doing, since giving attackers access to your control listener is really dangerous.
-
-Add `ControlListenAddress 0.0.0.0` to your `torrc` file (credits: https://stackoverflow.com/q/45901892/4183498) and set `tor_address` when initializing TorIpChanger
-
+#### Use `0.0.0.0` as control address
+Set `ControlPort` to `0.0.0.0:9051` in your `torrc` file  and set `tor_address` when initializing TorIpChanger
 ```python
 from toripchanger import TorIpChanger
 
@@ -65,9 +55,25 @@ tor_ip_changer = TorIpChanger(tor_address="172.17.0.2")
 current_ip = tor_ip_changer.get_new_ip()
 ```
 
+Though, Tor is not very happy about it (and rightly so) and will warn you
+>```
+>You have a ControlPort set to accept connections from a non-local address. This means that programs not running on your computer can reconfigure your Tor. That's pretty bad, since the controller protocol isn't encrypted! Maybe you should just listen on 127.0.0.1 and use a tool like stunnel or ssh to encrypt remote connections to your control port.
+>```
+
+Also, you have to set either `CookieAuthentication` or `HashedControlPassword` otherwise `ControlPort` will be closed
+>```
+>You have a ControlPort set to accept unauthenticated connections from a non-local address. This means that programs not running on your computer can reconfigure your Tor, without even having to guess a password. That's so bad that I'm closing your ControlPort for you. If you need to control your Tor remotely, try enabling authentication and using a tool like stunnel or ssh to encrypt remote access.
+>```
+
+Please note `ControlListenAddress` config is **OBSOLETE** and Tor (tested with 0.3.3.7) will ignore it and log the following message
+> ```
+> [warn] Skipping obsolete configuration option 'ControlListenAddress'
+> ```
+
+While the config itself is obsolte, its documentation concerning the risks related to exposing `ControlPort` on `0.0.0.0` is still valid  https://people.torproject.org/~sysrqb/webwml/docs/tor-manual.html.en#ControlListenAddress (**not part of the official documentation!**)
+> We strongly recommend that you leave this alone unless you know what you’re doing, since giving attackers access to your control listener is really dangerous.
 
 #### Use `toripchanger_server`
-
 `toripchanger_server` script starts a simple web server which allows you to change Tor' IP remotely using an HTTP get request to `/changeip/`. The response body is always
 
 ```
@@ -114,6 +120,6 @@ optional arguments:
 To be able to change Tor' IP remotely with `toripchanger_server`:
 
   1. `pip install toripchanger[server]` in your container
-  2. start `toripchanger_server`
-  3. expose the port `toripchanger_server` is running on to Docker host (or other containers)
+  2. start `toripchanger_server` (on the same host where Tor runs)
+  3. expose the port `toripchanger_server` runs on to Docker host (or other containers)
   4. test changing IP works, e.g. `curl http://localhost:8080/changeip/`

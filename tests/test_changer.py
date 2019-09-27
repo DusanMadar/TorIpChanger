@@ -256,7 +256,7 @@ class TestTorIpChanger(unittest.TestCase):
         Test that '_obtain_new_ip' obtains new Tor IP and expected methods are
         called while doing so within the context manager.
         """
-        tor_ip_changer = TorIpChanger()
+        tor_ip_changer = TorIpChanger(post_new_ip_sleep=1.0)
         tor_ip_changer._obtain_new_ip()
 
         mock_from_port.assert_any_call(address=TOR_ADDRESS, port=TOR_PORT)
@@ -265,4 +265,4 @@ class TestTorIpChanger(unittest.TestCase):
         mock_controler.signal.assert_any_call(Signal.NEWNYM)
         mock_controler.authenticate.assert_any_call(password=TOR_PASSWORD)
 
-        mock_sleep.assert_called_once_with(0.5)
+        mock_sleep.assert_called_once_with(1.0)

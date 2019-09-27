@@ -66,7 +66,7 @@ Please note `ControlListenAddress` config is **OBSOLETE** and Tor (tested with 0
 > [warn] Skipping obsolete configuration option 'ControlListenAddress'
 > ```
 
-While the config itself is obsolte, its documentation concerning the risks related to exposing `ControlPort` on `0.0.0.0` is still valid  https://people.torproject.org/~sysrqb/webwml/docs/tor-manual.html.en#ControlListenAddress (**not part of the official documentation!**)
+While the config itself is obsolte, its [documentation](https://people.torproject.org/~sysrqb/webwml/docs/tor-manual.html.en#ControlListenAddress) (**not the official documentation!**) concerning the risks related to exposing `ControlPort` on `0.0.0.0` is still valid
 > We strongly recommend that you leave this alone unless you know what you’re doing, since giving attackers access to your control listener is really dangerous.
 
 #### Use `toripchanger_server`

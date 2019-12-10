@@ -6,8 +6,10 @@ from setuptools import setup
 
 
 def read(fname, readlines=False):
-    with open(path.join(path.abspath(path.dirname(__file__)), fname)) as f:
-        return f.readlines() if readlines else f.read()
+    with open(
+        path.join(path.abspath(path.dirname(__file__)), fname), encoding="utf-8"
+    ) as f:
+        return f.read()
 
 
 requirements = read("requirements.txt", True)

@@ -9,7 +9,7 @@ def create_changeip_response(tor_ip_changer):
     try:
         new_ip = tor_ip_changer.get_new_ip()
     except Exception as exc:
-        error = f"{exc.__class__}: {str(exc)}"
+        error = "{}: {}".format(exc.__class__, str(exc))
         status = 500
 
     response = flask.jsonify({"newIp": new_ip, "error": error})

@@ -1,5 +1,4 @@
 import ipaddress
-import socket
 from time import sleep
 
 from requests import get
@@ -187,7 +186,7 @@ class TorIpChanger:
         Change Tor's IP.
         """
         with Controller.from_port(
-            address=socket.gethostbyname(self.tor_address), port=self.tor_port
+            address=self.tor_address, port=self.tor_port
         ) as controller:
             controller.authenticate(password=self.tor_password)
             controller.signal(Signal.NEWNYM)

@@ -29,7 +29,7 @@ setup(
     test_suite="tests",
     license="MIT",
     platforms="linux",
-    python_requires=">=3.6",
+    python_requires=">=3.5",
     install_requires=requirements,
     tests_require=requirements + requirements_server,
     classifiers=[

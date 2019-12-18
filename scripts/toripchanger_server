@@ -13,8 +13,8 @@ except ImportError as exc:
         raise
 
     sys.exit(
-        f"{str(exc)}\nflask is required to to use `toripchanger_server`. Run "
-        "'pip install toripchanger[server]' to install required dependencies"
+        "{}\nflask is required to to use `toripchanger_server`. Run "
+        "'pip install toripchanger[server]' to install required dependencies".format(str(exc))
     )
 
 
@@ -50,7 +50,7 @@ def parse_cmd_args():
     )
     parser.add_argument(
         "--tor-password",
-        default=f"\"{changer.TOR_PASSWORD}\"",
+        default="\"{}\"".format(changer.TOR_PASSWORD),
         type=str,
         help="Tor controller password",
     )

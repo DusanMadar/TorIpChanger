@@ -38,7 +38,7 @@ tor_ip_changer_1 = TorIpChanger(local_http_proxy='127.0.0.1:8888')
 current_ip = tor_ip_changer_1 .get_new_ip()
 
 # Current Tor IP address can be reused after 5 other Tor IPs were used.
-tor_ip_changer_5 = TorIpChanger(reuse_threshold=5)
+tor_ip_changer_5 = TorIpChanger(tor_address="localhost", reuse_threshold=5)
 current_ip = tor_ip_changer_5.get_new_ip()
 ```
 
@@ -107,10 +107,12 @@ optional arguments:
   --tor-password TOR_PASSWORD
                         Tor controller password (default: "")
   --tor-address TOR_ADDRESS
-                        IP address of the Tor controller (default: 127.0.0.1)
+                        IP address or resolvable hostname of the Tor
+                        controller (default: 127.0.0.1)
   --tor-port TOR_PORT   Port number of the Tor controller (default: 9051)
   --new-ip-max-attempts NEW_IP_MAX_ATTEMPTS
-                        Get new IP attemps limit (default: 10)
+                        Get new IP attempts limit (default: 10)
+
 ```
 
 To be able to change Tor' IP remotely with `toripchanger_server`:

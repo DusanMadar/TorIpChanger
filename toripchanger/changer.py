@@ -59,7 +59,7 @@ class TorIpChanger:
         :type tor_address: str
         :argument tor_port: port number of the Tor controller
         :type tor_port: int
-        :argument new_ip_max_attempts: get new IP attemps limit
+        :argument new_ip_max_attempts: get new IP attempts limit
         :type new_ip_max_attempts: int
         :argument post_new_ip_sleep: how long to wait after requesting a new IP
         :type post_new_ip_sleep: float

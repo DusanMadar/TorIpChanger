@@ -58,7 +58,7 @@ def parse_cmd_args():
         "--tor-address",
         default=changer.TOR_ADDRESS,
         type=str,
-        help="IP address of the Tor controller",
+        help="IP address or resolvable hostname of the Tor controller",
     )
     parser.add_argument(
         "--tor-port",
@@ -70,7 +70,7 @@ def parse_cmd_args():
         "--new-ip-max-attempts",
         default=changer.NEW_IP_MAX_ATTEMPTS,
         type=int,
-        help="Get new IP attemps limit",
+        help="Get new IP attempts limit",
     )
 
     return parser.parse_args()

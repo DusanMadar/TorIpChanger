@@ -14,11 +14,10 @@ requirements = read("requirements.txt", True)
 requirements_server = read("requirements-server.txt", True)
 
 setup(
-    version="1.1.2",
+    version="1.1.3",
     name="toripchanger",
     url="https://github.com/DusanMadar/TorIpChanger",
     author="Dusan Madar",
-    author_email="madar.dusan@gmail.com",
     description="Python powered way to get a unique Tor IP",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",

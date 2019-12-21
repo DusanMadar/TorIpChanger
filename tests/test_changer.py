@@ -268,16 +268,17 @@ class TestTorIpChanger(unittest.TestCase):
 
         mock_sleep.assert_called_once_with(1.0)
 
-    def test_init_ipchanger_resolve_hostname(self):
+    def test_init_resolve_hostname(self):
         """
-        Test that 'TorIpChanger()' resolves hostnames on initialization
+        Test that 'TorIpChanger()' resolves hostnames on initialization.
         """
-        # Attempt   to  initialize   TorIpChanger  with   an
-        # unresolvable name fails with socket.gaierror
+        # Attempt to initialize `TorIpChanger` with  an
+        # unresolvable name fails with socket.gaierror().
         with self.assertRaises(socket.gaierror):
             TorIpChanger(tor_address="unresolvable.address")
 
         # These 2 ways of initializing TorIpChanger are equivalent
+        # (because `tor_address` defaults to "127.0.0.1").
         changer1 = TorIpChanger(tor_address="localhost")
         changer2 = TorIpChanger()
         self.assertEqual(changer1.tor_address, changer2.tor_address)

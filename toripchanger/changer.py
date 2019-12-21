@@ -1,4 +1,6 @@
 import ipaddress
+import socket
+
 from time import sleep
 
 from requests import get
@@ -53,7 +55,7 @@ class TorIpChanger:
         :type local_http_proxy: str
         :argument tor_password: Tor password
         :type tor_password: str
-        :argument tor_address: IP address of the Tor controller
+        :argument tor_address: IP address or resolvable hostname of the Tor controller
         :type tor_address: str
         :argument tor_port: port number of the Tor controller
         :type tor_port: int
@@ -65,7 +67,7 @@ class TorIpChanger:
         self.reuse_threshold = reuse_threshold
         self.local_http_proxy = local_http_proxy
         self.tor_password = tor_password
-        self.tor_address = tor_address
+        self.tor_address = socket.gethostbyname(tor_address)
         self.tor_port = tor_port
         self.new_ip_max_attempts = new_ip_max_attempts
         self.post_new_ip_sleep = post_new_ip_sleep

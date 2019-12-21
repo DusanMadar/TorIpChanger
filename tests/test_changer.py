@@ -1,3 +1,4 @@
+import socket
 import unittest
 from unittest.mock import patch, Mock
 
@@ -266,3 +267,17 @@ class TestTorIpChanger(unittest.TestCase):
         mock_controler.authenticate.assert_any_call(password=TOR_PASSWORD)
 
         mock_sleep.assert_called_once_with(1.0)
+
+    def test_init_ipchanger_resolve_hostname(self):
+        """
+        Test that 'TorIpChanger()' resolves hostnames on initialization
+        """
+        # Attempt   to  initialize   TorIpChanger  with   an
+        # unresolvable name fails with socket.gaierror
+        with self.assertRaises(socket.gaierror):
+            TorIpChanger(tor_address="unresolvable.address")
+
+        # These 2 ways of initializing TorIpChanger are equivalent
+        changer1 = TorIpChanger(tor_address="localhost")
+        changer2 = TorIpChanger()
+        self.assertEqual(changer1.tor_address, changer2.tor_address)

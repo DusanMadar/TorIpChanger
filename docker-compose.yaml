@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  tor-proxy:
+    image: dperson/torproxy
+    ports:
+      - "8118:8118"  # Privoxy.
+      - "9051:9051"  # Tor Control.
+    environment:
+      PASSWORD: "tor"
+      TOR_ControlPort: "0.0.0.0:9051"
+
+  tor-ip-changer:
+    build: .
+    image: toripchanger
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - "tor-proxy"
+    command: [
+      "--tor-password", "tor",
+      "--tor-port", "9051",
+      "--tor-address", "tor-proxy",
+      "--new-ip-max-attempts", "100",
+      "--reuse-threshold", "5",
+      "--local-http-proxy", "http://tor-proxy:8118",
+      "--server-host", "0.0.0.0",
+      "--server-port", "8080",
+    ]

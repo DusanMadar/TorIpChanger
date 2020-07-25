@@ -14,13 +14,24 @@ A simple workaround for [Tor IP changing behavior](https://stem.torproject.org/f
 pip install toripchanger
 ```
 
-TorIpChanger assumes you have installed and setup Tor and Privoxy, for example following steps mentioned in these tutorials:
+
+## Dependencies
+TorIpChanger *assumes you have installed and setup Tor and Privoxy*, for example following steps mentioned in these tutorials:
 
 * [A step-by-step guide how to use Python with Tor and Privoxy](https://gist.github.com/DusanMadar/8d11026b7ce0bce6a67f7dd87b999f6b)
 * [Crawling anonymously with Tor in Python](http://sacharya.com/crawling-anonymously-with-tor-in-python/)
   * [Alternative link (Gist)](https://gist.github.com/KhepryQuixote/46cf4f3b999d7f658853) for "Crawling anonymously with Tor in Python"
 
-Or, when using Docker, simply use https://github.com/dperson/torproxy.
+Or, when using Docker, simply use https://github.com/dperson/torproxy. Refer to
+[Dockerfile](Dockerfile) and [docker-compose.yaml](docker-compose.yaml) for more details.
+
+```console
+dm@lnx:~/code/toripchanger$ docker-compose up -d
+Starting toripchanger_tor-proxy_1 ... done
+Starting toripchanger_tor-ip-changer_1 ... done
+dm@lnx:~/code/toripchanger$ curl http://localhost:8080/changeip/
+{"error":"","newIp":"1.2.3.4"}
+```
 
 
 ## Usage
@@ -70,7 +81,7 @@ While the config itself is obsolte, its [documentation](https://people.torprojec
 > We strongly recommend that you leave this alone unless you know what you’re doing, since giving attackers access to your control listener is really dangerous.
 
 #### Use `toripchanger_server`
-`toripchanger_server` script starts a simple web server which allows you to change Tor' IP remotely using an HTTP get request to `/changeip/`. The response body is always
+[toripchanger_server](scripts/toripchanger_server) script starts a simple web server which allows you to change Tor' IP remotely using an HTTP get request to `/changeip/`. The response body is always
 
 ```
 {
@@ -115,9 +126,12 @@ optional arguments:
 
 ```
 
-To be able to change Tor' IP remotely with `toripchanger_server`:
+To be able to change Tor IP remotely with `toripchanger_server`
 
-  1. `pip install toripchanger[server]` in your container
+  1. run `pip install toripchanger[server]` in your container
   2. start `toripchanger_server` (on the same host where Tor runs)
   3. expose the port `toripchanger_server` runs on to Docker host (or other containers)
   4. test changing IP works, e.g. `curl http://localhost:8080/changeip/`
+
+An example [docker-compose.yaml](docker-compose.yaml) can be used for testing
+as instructed in section [Dependencies](#dependencies).

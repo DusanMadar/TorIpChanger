@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/DusanMadar/TorIpChanger.svg?branch=master)](https://travis-ci.org/DusanMadar/TorIpChanger)
+[![Build Status](https://github.com/DusanMadar/TorIpChanger/actions/workflows/main.yml/badge.svg)](https://github.com/DusanMadar/TorIpChanger/actions/workflows/main.yml)
 [![Coverage Status](https://coveralls.io/repos/github/DusanMadar/TorIpChanger/badge.svg?branch=master)](https://coveralls.io/github/DusanMadar/TorIpChanger?branch=master)
 [![PyPI version](https://badge.fury.io/py/toripchanger.svg)](https://badge.fury.io/py/toripchanger)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)

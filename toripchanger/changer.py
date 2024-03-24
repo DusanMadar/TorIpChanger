@@ -21,7 +21,7 @@ POST_NEW_IP_SLEEP = 0.5
 
 
 # Service to get current IP.
-ICANHAZIP = "http://icanhazip.com/"
+ICANHAZIP = "https://icanhazip.com/"
 
 
 class TorIpChanger:
@@ -178,7 +178,7 @@ class TorIpChanger:
         # Register current IP.
         self.used_ips.append(current_ip)
 
-        # Release the oldest registred IP.
+        # Release the oldest registered IP.
         if self.reuse_threshold:
             if len(self.used_ips) > self.reuse_threshold:
                 del self.used_ips[0]

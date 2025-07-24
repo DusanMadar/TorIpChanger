@@ -45,7 +45,7 @@ tor_ip_changer_0 = TorIpChanger(reuse_threshold=0)
 current_ip = tor_ip_changer_0.get_new_ip()
 
 # Current Tor IP address can be reused after one other IP was used (default setting).
-tor_ip_changer_1 = TorIpChanger(local_http_proxy='127.0.0.1:8888')
+tor_ip_changer_1 = TorIpChanger(local_http_proxy='http://127.0.0.1:8888')
 current_ip = tor_ip_changer_1 .get_new_ip()
 
 # Current Tor IP address can be reused after 5 other Tor IPs were used.
@@ -62,7 +62,13 @@ Set `ControlPort` to `0.0.0.0:9051` in your `torrc` file  and set `tor_address` 
 ```python
 from toripchanger import TorIpChanger
 
-tor_ip_changer = TorIpChanger(tor_address="172.17.0.2")
+# Mirroring the setup from the local docker-compose.yaml.
+tor_ip_changer = TorIpChanger(
+  tor_password="tor",
+  tor_port=9051,
+  tor_address="tor-proxy",
+  local_http_proxy='http://tor-proxy:8118',
+)
 current_ip = tor_ip_changer.get_new_ip()
 ```
 
@@ -114,7 +120,7 @@ optional arguments:
                         Number of IPs to use before reusing the current one
                         (default: 1)
   --local-http-proxy LOCAL_HTTP_PROXY
-                        Local proxy IP and port (default: 127.0.0.1:8118)
+                        Local proxy IP and port (default: http://127.0.0.1:8118)
   --tor-password TOR_PASSWORD
                         Tor controller password (default: "")
   --tor-address TOR_ADDRESS

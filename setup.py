@@ -14,7 +14,7 @@ requirements = read("requirements.txt", True)
 requirements_server = read("requirements-server.txt", True)
 
 setup(
-    version="1.2.0",
+    version="1.3.0",
     name="toripchanger",
     url="https://github.com/DusanMadar/TorIpChanger",
     author="Dusan Madar",

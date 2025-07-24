@@ -5,7 +5,7 @@ from unittest.mock import patch, Mock
 from stem import Signal
 
 from toripchanger.changer import (
-    ICANHAZIP,
+    ICANHAZIP_HTTPS,
     LOCAL_HTTP_PROXY,
     NEW_IP_MAX_ATTEMPTS,
     TorIpChanger,
@@ -47,7 +47,7 @@ class TestTorIpChanger(unittest.TestCase):
         tor_ip_changer = TorIpChanger()
         tor_ip_changer.real_ip
 
-        mock_get.assert_called_once_with(ICANHAZIP)
+        mock_get.assert_called_once_with(ICANHAZIP_HTTPS)
         mock_get_response_text.assert_called_once_with(mock_response)
 
     @patch("toripchanger.changer.get")
@@ -65,7 +65,8 @@ class TestTorIpChanger(unittest.TestCase):
         self.assertEqual(current_ip, mock_get_response_text.return_value)
 
         mock_get.assert_called_once_with(
-            ICANHAZIP, proxies={"http": LOCAL_HTTP_PROXY}
+            ICANHAZIP_HTTPS,
+            proxies={"http": LOCAL_HTTP_PROXY, "https": LOCAL_HTTP_PROXY},
         )
 
     @patch("toripchanger.changer.get")
